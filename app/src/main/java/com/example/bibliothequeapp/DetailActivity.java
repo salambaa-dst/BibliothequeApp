@@ -1,0 +1,54 @@
+package com.example.bibliothequeapp;
+
+import android.os.Bundle;
+import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class DetailActivity extends AppCompatActivity {
+
+    TextView tvTitre, tvAuteur, tvIsbn, tvDisponibilite;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_detail);
+
+        // Activation du bouton retour
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        // Récupération des vues
+        tvTitre = findViewById(R.id.tvTitre);
+        tvAuteur = findViewById(R.id.tvAuteur);
+        tvIsbn = findViewById(R.id.tvIsbn);
+        tvDisponibilite = findViewById(R.id.tvDisponibilite);
+
+        // Récupération de l'objet Livre
+        Livre livre = (Livre) getIntent().getSerializableExtra("livre");
+
+        if (livre != null) {
+            tvTitre.setText(livre.getTitre());
+            tvAuteur.setText("Auteur : " + livre.getAuteur());
+            tvIsbn.setText("ISBN : " + livre.getIsbn());
+
+            if (livre.isDisponible()) {
+                tvDisponibilite.setText("✅ Disponible");
+                tvDisponibilite.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+            } else {
+                tvDisponibilite.setText("❌ Indisponible");
+                tvDisponibilite.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+            }
+        }
+    }
+
+    // Bouton retour
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+}
