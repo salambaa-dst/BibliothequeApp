@@ -1,11 +1,11 @@
 package com.example.bibliothequeapp;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,20 +36,27 @@ public class LivreAdapter extends RecyclerView.Adapter<LivreAdapter.LivreViewHol
         holder.tvAuteurLivre.setText("Auteur : " + livre.getAuteur());
         holder.tvIsbnLivre.setText("ISBN : " + livre.getIsbn());
 
-        // Badge disponibilité
         if (livre.isDisponible()) {
-            holder.tvDisponibilite.setText("✅ Disponible");
-            holder.tvDisponibilite.setBackgroundResource(R.drawable.badge_disponible);
+            holder.tvDisponibilite.setText("Disponible");
+            holder.tvDisponibilite.setBackgroundColor(Color.parseColor("#2E7D32"));
         } else {
-            holder.tvDisponibilite.setText("❌ Indisponible");
-            holder.tvDisponibilite.setBackgroundResource(R.drawable.badge_indisponible);
+            holder.tvDisponibilite.setText("Indisponible");
+            holder.tvDisponibilite.setBackgroundColor(Color.parseColor("#C62828"));
         }
 
-        // Clic sur un livre → DetailActivity
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), DetailActivity.class);
             intent.putExtra("livre", livre);
             v.getContext().startActivity(intent);
+        });
+
+        holder.itemView.setOnLongClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), AddEditActivity.class);
+            intent.putExtra(AddEditActivity.EXTRA_MODE, AddEditActivity.MODE_EDIT);
+            intent.putExtra(AddEditActivity.EXTRA_LIVRE, livre);
+            intent.putExtra(AddEditActivity.EXTRA_POSITION, holder.getAdapterPosition());
+            v.getContext().startActivity(intent);
+            return true;
         });
     }
 
