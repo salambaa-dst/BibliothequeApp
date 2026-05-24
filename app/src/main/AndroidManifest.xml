@@ -26,6 +26,7 @@
             android:exported="false"
             android:parentActivityName=".MainActivity" />
 
+        
         <activity
             android:name=".AddEditActivity"
             android:exported="false"
