@@ -5,17 +5,15 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.widget.Switch;
 public class AddEditActivity extends AppCompatActivity {
 
     public static final String EXTRA_MODE = "MODE";
     public static final String EXTRA_LIVRE = "LIVRE";
-    public static final String EXTRA_POSITION = "POSITION";
 
     public static final String MODE_ADD = "ADD";
     public static final String MODE_EDIT = "EDIT";
@@ -24,12 +22,12 @@ public class AddEditActivity extends AppCompatActivity {
     private EditText etAuteur;
     private EditText etIsbn;
     private Switch switchDisponible;
+
     private Button btnEnregistrer;
     private TextView tvTitreFormulaire;
 
     private String mode;
     private Livre livreAModifier;
-    private int positionLivre = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +51,7 @@ public class AddEditActivity extends AppCompatActivity {
 
         if (MODE_EDIT.equals(mode)) {
             tvTitreFormulaire.setText("Modifier le livre");
-
             livreAModifier = (Livre) intent.getSerializableExtra(EXTRA_LIVRE);
-            positionLivre = intent.getIntExtra(EXTRA_POSITION, -1);
 
             if (livreAModifier != null) {
                 etTitre.setText(livreAModifier.getTitre());
@@ -63,7 +59,6 @@ public class AddEditActivity extends AppCompatActivity {
                 etIsbn.setText(livreAModifier.getIsbn());
                 switchDisponible.setChecked(livreAModifier.isDisponible());
             }
-
         } else {
             mode = MODE_ADD;
             tvTitreFormulaire.setText("Ajouter un livre");
@@ -85,27 +80,14 @@ public class AddEditActivity extends AppCompatActivity {
         Livre livre;
 
         if (MODE_EDIT.equals(mode) && livreAModifier != null) {
-            livre = new Livre(
-                    livreAModifier.getId(),
-                    titre,
-                    auteur,
-                    isbn,
-                    disponible
-            );
+            livre = new Livre(livreAModifier.getId(), titre, auteur, isbn, disponible);
         } else {
-            livre = new Livre(
-                    0,
-                    titre,
-                    auteur,
-                    isbn,
-                    disponible
-            );
+            livre = new Livre(0, titre, auteur, isbn, disponible);
         }
 
         Intent resultIntent = new Intent();
         resultIntent.putExtra(EXTRA_MODE, mode);
         resultIntent.putExtra(EXTRA_LIVRE, livre);
-        resultIntent.putExtra(EXTRA_POSITION, positionLivre);
 
         setResult(RESULT_OK, resultIntent);
         finish();

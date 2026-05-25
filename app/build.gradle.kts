@@ -4,11 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.bibliothequeapp"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.bibliothequeapp"
@@ -36,15 +32,15 @@ android {
 }
 
 dependencies {
-    implementation(libs.activity.ktx)
     implementation(libs.appcompat)
-    implementation(libs.constraintlayout)
     implementation(libs.material)
-    // Ajout RecyclerView et CardView
+    implementation(libs.activity.ktx)
+    implementation(libs.constraintlayout)
     implementation(libs.recyclerview)
     implementation(libs.cardview)
-
     testImplementation(libs.junit)
-    androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+    implementation(libs.room.runtime)
+    annotationProcessor(libs.room.compiler)
 }
