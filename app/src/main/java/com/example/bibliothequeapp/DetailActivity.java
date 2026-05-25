@@ -8,26 +8,24 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class DetailActivity extends AppCompatActivity {
 
-    TextView tvTitre, tvAuteur, tvIsbn, tvDisponibilite;
+    TextView tvTitre, tvAuteur, tvIsbn, tvDisponibilite, tvAnnee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        // Activation du bouton retour
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // Récupération des vues
         tvTitre = findViewById(R.id.tvTitre);
         tvAuteur = findViewById(R.id.tvAuteur);
         tvIsbn = findViewById(R.id.tvIsbn);
         tvDisponibilite = findViewById(R.id.tvDisponibilite);
+        tvAnnee = findViewById(R.id.tvAnnee);
 
-        // Récupération de l'objet Livre
         Livre livre = (Livre) getIntent().getSerializableExtra("livre");
 
         if (livre != null) {
@@ -42,10 +40,15 @@ public class DetailActivity extends AppCompatActivity {
                 tvDisponibilite.setText("❌ Indisponible");
                 tvDisponibilite.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
             }
+
+            if (livre.getAnneePublication() > 0) {
+                tvAnnee.setText("Année : " + livre.getAnneePublication());
+            } else {
+                tvAnnee.setText("Année : non renseignée");
+            }
         }
     }
 
-    // Bouton retour
     @Override
     public boolean onSupportNavigateUp() {
         finish();

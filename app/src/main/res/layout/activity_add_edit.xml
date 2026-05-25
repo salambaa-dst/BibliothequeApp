@@ -43,6 +43,14 @@
             android:inputType="text"
             android:layout_marginBottom="16dp" />
 
+        <EditText
+            android:id="@+id/etAnneePublication"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Année de publication (ex: 2023)"
+            android:inputType="number"
+            android:layout_marginBottom="16dp" />
+
         <Switch
             android:id="@+id/switchDisponible"
             android:layout_width="wrap_content"

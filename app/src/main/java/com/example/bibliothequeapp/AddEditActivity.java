@@ -5,11 +5,12 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import android.widget.Switch;
+
 public class AddEditActivity extends AppCompatActivity {
 
     public static final String EXTRA_MODE = "MODE";
@@ -21,8 +22,8 @@ public class AddEditActivity extends AppCompatActivity {
     private EditText etTitre;
     private EditText etAuteur;
     private EditText etIsbn;
+    private EditText etAnneePublication;
     private Switch switchDisponible;
-
     private Button btnEnregistrer;
     private TextView tvTitreFormulaire;
 
@@ -43,6 +44,7 @@ public class AddEditActivity extends AppCompatActivity {
         etTitre = findViewById(R.id.etTitre);
         etAuteur = findViewById(R.id.etAuteur);
         etIsbn = findViewById(R.id.etIsbn);
+        etAnneePublication = findViewById(R.id.etAnneePublication);
         switchDisponible = findViewById(R.id.switchDisponible);
         btnEnregistrer = findViewById(R.id.btnEnregistrer);
 
@@ -58,6 +60,7 @@ public class AddEditActivity extends AppCompatActivity {
                 etAuteur.setText(livreAModifier.getAuteur());
                 etIsbn.setText(livreAModifier.getIsbn());
                 switchDisponible.setChecked(livreAModifier.isDisponible());
+                etAnneePublication.setText(String.valueOf(livreAModifier.getAnneePublication()));
             }
         } else {
             mode = MODE_ADD;
@@ -73,6 +76,11 @@ public class AddEditActivity extends AppCompatActivity {
         String isbn = etIsbn.getText().toString().trim();
         boolean disponible = switchDisponible.isChecked();
 
+        int anneePublication = 0;
+        if (!etAnneePublication.getText().toString().isEmpty()) {
+            anneePublication = Integer.parseInt(etAnneePublication.getText().toString());
+        }
+
         if (!validerFormulaire(titre, auteur, isbn)) {
             return;
         }
@@ -80,9 +88,9 @@ public class AddEditActivity extends AppCompatActivity {
         Livre livre;
 
         if (MODE_EDIT.equals(mode) && livreAModifier != null) {
-            livre = new Livre(livreAModifier.getId(), titre, auteur, isbn, disponible);
+            livre = new Livre(livreAModifier.getId(), titre, auteur, isbn, disponible, anneePublication);
         } else {
-            livre = new Livre(0, titre, auteur, isbn, disponible);
+            livre = new Livre(0, titre, auteur, isbn, disponible, anneePublication);
         }
 
         Intent resultIntent = new Intent();

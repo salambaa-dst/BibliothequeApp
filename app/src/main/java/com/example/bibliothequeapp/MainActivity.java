@@ -2,7 +2,10 @@ package com.example.bibliothequeapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.EditText;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -22,10 +25,11 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewLivres;
     private FloatingActionButton fabAjouterLivre;
+    private TextView tvListeVide;
 
     private LivreAdapter livreAdapter;
     private List<Livre> listeLivres;
-
+    private EditText etRecherche;
     private AppDatabase database;
     private ExecutorService executorService;
 
@@ -38,6 +42,22 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerViewLivres = findViewById(R.id.recyclerViewLivres);
         fabAjouterLivre = findViewById(R.id.fabAjouterLivre);
+        tvListeVide = findViewById(R.id.tvListeVide);
+
+        etRecherche = findViewById(R.id.etRecherche);
+
+        etRecherche.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                rechercherLivres(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(android.text.Editable s) {}
+        });
 
         database = AppDatabase.getInstance(this);
         executorService = Executors.newSingleThreadExecutor();
@@ -64,6 +84,29 @@ public class MainActivity extends AppCompatActivity {
         fabAjouterLivre.setOnClickListener(v -> ouvrirFormulaireAjout());
 
         chargerLivresDepuisRoom();
+    }
+
+    private void rechercherLivres(String query) {
+        executorService.execute(() -> {
+            List<Livre> resultats;
+            if (query.isEmpty()) {
+                resultats = database.livreDao().getAllLivres();
+            } else {
+                resultats = database.livreDao().rechercherParTitre("%" + query + "%");
+            }
+            runOnUiThread(() -> {
+                listeLivres.clear();
+                listeLivres.addAll(resultats);
+                livreAdapter.notifyDataSetChanged();
+                if (listeLivres.isEmpty()) {
+                    tvListeVide.setVisibility(View.VISIBLE);
+                    recyclerViewLivres.setVisibility(View.GONE);
+                } else {
+                    tvListeVide.setVisibility(View.GONE);
+                    recyclerViewLivres.setVisibility(View.VISIBLE);
+                }
+            });
+        });
     }
 
     private void initialiserActivityResultLauncher() {
@@ -94,6 +137,14 @@ public class MainActivity extends AppCompatActivity {
                 listeLivres.clear();
                 listeLivres.addAll(livresDepuisBase);
                 livreAdapter.notifyDataSetChanged();
+
+                if (listeLivres.isEmpty()) {
+                    tvListeVide.setVisibility(View.VISIBLE);
+                    recyclerViewLivres.setVisibility(View.GONE);
+                } else {
+                    tvListeVide.setVisibility(View.GONE);
+                    recyclerViewLivres.setVisibility(View.VISIBLE);
+                }
             });
         });
     }
@@ -113,8 +164,15 @@ public class MainActivity extends AppCompatActivity {
         executorService.execute(() -> {
             database.livreDao().update(livre);
             runOnUiThread(() -> {
+                for (int i = 0; i < listeLivres.size(); i++) {
+                    if (listeLivres.get(i).getId() == livre.getId()) {
+                        livreAdapter.modifierLivre(i, livre);
+                        break;
+                    }
+                }
                 Toast.makeText(this, "✏️ Livre modifié !", Toast.LENGTH_SHORT).show();
-                chargerLivresDepuisRoom();
+                tvListeVide.setVisibility(View.GONE);
+                recyclerViewLivres.setVisibility(View.VISIBLE);
             });
         });
     }
@@ -123,8 +181,21 @@ public class MainActivity extends AppCompatActivity {
         executorService.execute(() -> {
             database.livreDao().delete(livre);
             runOnUiThread(() -> {
+                int position = -1;
+                for (int i = 0; i < listeLivres.size(); i++) {
+                    if (listeLivres.get(i).getId() == livre.getId()) {
+                        position = i;
+                        break;
+                    }
+                }
+                if (position != -1) {
+                    livreAdapter.supprimerLivre(position);
+                }
                 Toast.makeText(this, "🗑️ Livre supprimé !", Toast.LENGTH_SHORT).show();
-                chargerLivresDepuisRoom();
+                if (listeLivres.isEmpty()) {
+                    tvListeVide.setVisibility(View.VISIBLE);
+                    recyclerViewLivres.setVisibility(View.GONE);
+                }
             });
         });
     }

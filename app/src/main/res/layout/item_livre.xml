@@ -15,7 +15,6 @@
         android:orientation="horizontal"
         android:padding="16dp">
 
-        <!-- Icône livre -->
         <TextView
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -24,13 +23,11 @@
             android:gravity="center"
             android:layout_marginEnd="16dp"/>
 
-        <!-- Informations -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Titre du livre -->
             <TextView
                 android:id="@+id/tvTitreLivre"
                 android:layout_width="wrap_content"
@@ -40,7 +37,6 @@
                 android:textStyle="bold"
                 android:textColor="#1A1A1A"/>
 
-            <!-- Auteur du livre -->
             <TextView
                 android:id="@+id/tvAuteurLivre"
                 android:layout_width="wrap_content"
@@ -50,7 +46,6 @@
                 android:textSize="14sp"
                 android:textColor="#616161"/>
 
-            <!-- ISBN du livre -->
             <TextView
                 android:id="@+id/tvIsbnLivre"
                 android:layout_width="wrap_content"
@@ -60,7 +55,15 @@
                 android:textSize="12sp"
                 android:textColor="#9E9E9E"/>
 
-            <!-- Badge de disponibilité -->
+            <TextView
+                android:id="@+id/tvAnneeLivre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Année : -"
+                android:textSize="12sp"
+                android:textColor="#9E9E9E"/>
+
             <TextView
                 android:id="@+id/tvDisponibilite"
                 android:layout_width="wrap_content"
